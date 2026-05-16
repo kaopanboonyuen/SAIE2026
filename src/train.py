@@ -68,7 +68,6 @@ PRETRAINED_MODEL = (
 )
 
 PRETRAINED_WEIGHT_NAME = "SAIE_TinyVisDrone_8s_50E.pt"
-PRETRAINED_WEIGHT_NAME_FINAL = "SAIE_TinyVisDrone_8s_5000E.pt"
 
 # ------------------------------------------------------------
 # Training Configuration
@@ -322,7 +321,7 @@ print("\n================================================")
 print("STEP 11 — LOADING MODEL")
 print("================================================\n")
 
-model = YOLO(PRETRAINED_WEIGHT_NAME_FINAL)
+model = YOLO(PRETRAINED_WEIGHT_NAME)
 
 print("Model loaded successfully.")
 
@@ -349,7 +348,7 @@ results = model.train(
 
     data=str(yaml_path),
 
-    epochs=5,
+    epochs=5000,
 
     imgsz=416,
 
@@ -523,36 +522,36 @@ for i in range(3):
         plt.show()
 
 
-# # ============================================================
-# # STEP 19 — EXPORT MODEL
-# # ============================================================
+# ============================================================
+# STEP 19 — EXPORT MODEL
+# ============================================================
 
-# print("\n================================================")
-# print("STEP 19 — EXPORTING MODEL")
-# print("================================================\n")
+print("\n================================================")
+print("STEP 19 — EXPORTING MODEL")
+print("================================================\n")
 
-# # ------------------------------------------------------------
-# # Export to ONNX
-# # ------------------------------------------------------------
+# ------------------------------------------------------------
+# Export to ONNX
+# ------------------------------------------------------------
 
-# model.export(format="onnx")
+model.export(format="onnx")
 
-# print("ONNX export completed.")
+print("ONNX export completed.")
 
-# # ------------------------------------------------------------
-# # Export to TensorRT
-# # ------------------------------------------------------------
+# ------------------------------------------------------------
+# Export to TensorRT
+# ------------------------------------------------------------
 
-# try:
+try:
 
-#     model.export(format="engine")
+    model.export(format="engine")
 
-#     print("TensorRT export completed.")
+    print("TensorRT export completed.")
 
-# except Exception as e:
+except Exception as e:
 
-#     print("\nTensorRT export skipped.")
-#     print("Reason:", e)
+    print("\nTensorRT export skipped.")
+    print("Reason:", e)
 
 
 # ============================================================
