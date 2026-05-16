@@ -125,6 +125,33 @@ with zipfile.ZipFile(DATASET_ZIP, "r") as zip_ref:
 
 print("Dataset extracted successfully.")
 
+# Auto-fix YAML path
+
+yaml_path = DATA_ROOT / "data.yaml"
+
+yaml_text = """
+path: data/SAE_TinyVisDroneFinal
+
+train: images/train
+val: images/val
+
+names:
+  0: pedestrian
+  1: people
+  2: bicycle
+  3: car
+  4: van
+  5: truck
+  6: tricycle
+  7: awning-tricycle
+  8: bus
+  9: motor
+"""
+
+with open(yaml_path, "w") as f:
+    f.write(yaml_text)
+
+print("data.yaml updated.")
 
 # ============================================================
 # STEP 5 — VERIFY DATASET STRUCTURE
