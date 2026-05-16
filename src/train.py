@@ -31,15 +31,15 @@ from ultralytics import YOLO
 # =========================
 # 2. DOWNLOAD DATASET
 # =========================
-print("\n[INFO] Downloading SAE TinyVisDrone dataset...")
-url = "https://github.com/kaopanboonyuen/SAIE2026/raw/main/dataset/SAE_TinyVisDroneFinal.zip"
-output = "SAE_TinyVisDroneFinal.zip"
-gdown.download(url, output, quiet=False)
+# print("\n[INFO] Downloading SAE TinyVisDrone dataset...")
+# url = "https://github.com/kaopanboonyuen/SAIE2026/raw/main/dataset/SAE_TinyVisDroneFinal.zip"
+# output = "SAE_TinyVisDroneFinal.zip"
+# gdown.download(url, output, quiet=False)
 
-# Extract ZIP directly to current folder
-with zipfile.ZipFile(output, "r") as zip_ref:
-    zip_ref.extractall(".")
-print("[INFO] Dataset extracted to SAE_TinyVisDroneFinal/")
+# # Extract ZIP directly to current folder
+# with zipfile.ZipFile(output, "r") as zip_ref:
+#     zip_ref.extractall(".")
+# print("[INFO] Dataset extracted to SAE_TinyVisDroneFinal/")
 
 # =========================
 # 3. LOAD DATASET
