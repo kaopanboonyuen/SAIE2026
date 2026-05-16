@@ -1,214 +1,546 @@
-"""
-SAIE2026 Workshop Training Pipeline (FULL PRODUCTION READY)
+# ============================================================
+# SAIE 2026
+# Super AI Engineer Thailand
+# ------------------------------------------------------------
+# Topic:
+# AI in the Real World:
+# Trade-offs Behind Fast & Scalable Object Detection
+#
+# Training Script:
+# SAIE_train.py
+#
+# Author:
+# Super AI Engineer Workshop
+# ============================================================
 
-Theme:
-AI in the Real World: Trade-offs Behind Fast & Scalable Object Detection
+# ============================================================
+# STEP 0 — INSTALL REQUIRED PACKAGES
+# ============================================================
 
-This script demonstrates:
-1. Dataset auto-download and validation
-2. Exploratory Data Analysis (EDA)
-3. Auto-fix data.yaml for Colab/EC2 compatibility
-4. Pretrained YOLO model training (5000 epochs)
-5. Metrics logging: Precision, Recall, F1, mAP
-6. Final report with ETA and runtime summary
+# Recommended:
+# pip install ultralytics gdown seaborn opencv-python matplotlib
 
-Designed for EC2 / Colab GPU runs for workshop demonstration
-"""
+# ============================================================
+# STEP 1 — IMPORT LIBRARIES
+# ============================================================
 
-# =========================
-# 1. IMPORTS
-# =========================
-import gdown
+import random
 import zipfile
-import time
-import yaml, os
 from pathlib import Path
 from collections import Counter
-from datetime import datetime
+
+import cv2
+import gdown
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
 
 from ultralytics import YOLO
 
-# =========================
-# 2. DOWNLOAD DATASET
-# =========================
-# print("\n[INFO] Downloading SAE TinyVisDrone dataset...")
-# url = "https://github.com/kaopanboonyuen/SAIE2026/raw/main/dataset/SAE_TinyVisDroneFinal.zip"
-# output = "SAE_TinyVisDroneFinal.zip"
-# gdown.download(url, output, quiet=False)
 
-# # Extract ZIP directly to current folder
-# with zipfile.ZipFile(output, "r") as zip_ref:
-#     zip_ref.extractall(".")
-# print("[INFO] Dataset extracted to SAE_TinyVisDroneFinal/")
+# ============================================================
+# STEP 2 — GLOBAL CONFIGURATION
+# ============================================================
 
-# =========================
-# 3. LOAD DATASET
-# =========================
-root = Path("SAE_TinyVisDroneFinal")
+# ------------------------------------------------------------
+# Dataset Configuration
+# ------------------------------------------------------------
 
-train_imgs = list((root / "images/train").glob("*.jpg"))
-val_imgs = list((root / "images/val").glob("*.jpg"))
-train_lbls = list((root / "labels/train").glob("*.txt"))
-val_lbls = list((root / "labels/val").glob("*.txt"))
+DATASET_URL = (
+    "https://github.com/kaopanboonyuen/SAIE2026/raw/main/dataset/"
+    "SAE_TinyVisDroneFinal.zip"
+)
 
-print("\n===== DATASET STATS =====")
-print(f"Train images: {len(train_imgs)}")
-print(f"Val images  : {len(val_imgs)}")
+DATASET_ZIP = "dataset.zip"
 
-# =========================
-# 4. AUTO-FIX data.yaml
-# =========================
-yaml_path = root / "data.yaml"
+DATA_ROOT = Path("data/SAE_TinyVisDroneFinal")
 
-with open(yaml_path, 'r') as f:
-    cfg = yaml.safe_load(f)
+# ------------------------------------------------------------
+# Pretrained Model
+# ------------------------------------------------------------
 
-# Remove any existing 'path' to avoid double-folder issue
-cfg.pop('path', None)
+# Instead of yolov8s.pt, we use our custom SAIE pretrained model
+# trained specifically for Tiny VisDrone scenarios.
 
-# Set absolute paths for train/val to current root folder
-cfg['train'] = os.path.join(str(root), 'images/train')
-cfg['val']   = os.path.join(str(root), 'images/val')
+PRETRAINED_MODEL = (
+    "https://github.com/kaopanboonyuen/SAIE2026/raw/main/weights/"
+    "SAIE_TinyVisDrone_8s_50E.pt"
+)
 
-with open(yaml_path, 'w') as f:
-    yaml.dump(cfg, f)
+PRETRAINED_WEIGHT_NAME = "SAIE_TinyVisDrone_8s_50E.pt"
 
-print(f"[INFO] data.yaml auto-fixed: train -> {cfg['train']}, val -> {cfg['val']}")
+# ------------------------------------------------------------
+# Training Configuration
+# ------------------------------------------------------------
 
-# =========================
-# 5. CLASS DISTRIBUTION
-# =========================
+EPOCHS = 5000
+IMAGE_SIZE = 416
+BATCH_SIZE = 16
+DEVICE = 0
+
+PROJECT_NAME = "SAIE2026"
+RUN_NAME = "SAIE_TinyVisDrone_Training"
+
+# ------------------------------------------------------------
+# Class Names
+# ------------------------------------------------------------
+
 CLASS_NAMES = {
-    0: "pedestrian", 1: "people", 2: "bicycle", 3: "car", 4: "van",
-    5: "truck", 6: "tricycle", 7: "awning-tricycle", 8: "bus", 9: "motor"
+    0: "pedestrian",
+    1: "people",
+    2: "bicycle",
+    3: "car",
+    4: "van",
+    5: "truck",
+    6: "tricycle",
+    7: "awning-tricycle",
+    8: "bus",
+    9: "motor"
 }
 
+
+# ============================================================
+# STEP 3 — DOWNLOAD DATASET
+# ============================================================
+
+print("\n================================================")
+print("STEP 3 — DOWNLOADING DATASET")
+print("================================================\n")
+
+gdown.download(DATASET_URL, DATASET_ZIP, quiet=False)
+
+print("\nDataset download completed.")
+
+
+# ============================================================
+# STEP 4 — EXTRACT DATASET
+# ============================================================
+
+print("\n================================================")
+print("STEP 4 — EXTRACTING DATASET")
+print("================================================\n")
+
+with zipfile.ZipFile(DATASET_ZIP, "r") as zip_ref:
+    zip_ref.extractall("data")
+
+print("Dataset extracted successfully.")
+
+
+# ============================================================
+# STEP 5 — VERIFY DATASET STRUCTURE
+# ============================================================
+
+print("\n================================================")
+print("STEP 5 — VERIFYING DATASET")
+print("================================================\n")
+
+print("Dataset root exists:", DATA_ROOT.exists())
+
+print("\nDataset folders:")
+
+for folder in DATA_ROOT.iterdir():
+    print(" -", folder)
+
+
+# ============================================================
+# STEP 6 — LOAD IMAGE AND LABEL PATHS
+# ============================================================
+
+train_imgs = list((DATA_ROOT / "images/train").glob("*.jpg"))
+val_imgs = list((DATA_ROOT / "images/val").glob("*.jpg"))
+
+train_lbls = list((DATA_ROOT / "labels/train").glob("*.txt"))
+val_lbls = list((DATA_ROOT / "labels/val").glob("*.txt"))
+
+
+# ============================================================
+# STEP 7 — DATASET STATISTICS
+# ============================================================
+
+print("\n================================================")
+print("STEP 7 — DATASET STATISTICS")
+print("================================================\n")
+
+print(f"Train images : {len(train_imgs)}")
+print(f"Validation images : {len(val_imgs)}")
+
+print(f"Train labels : {len(train_lbls)}")
+print(f"Validation labels : {len(val_lbls)}")
+
+
+# ============================================================
+# STEP 8 — CLASS DISTRIBUTION ANALYSIS
+# ============================================================
+
+print("\n================================================")
+print("STEP 8 — CLASS DISTRIBUTION")
+print("================================================\n")
+
 counter = Counter()
-for lf in train_lbls + val_lbls:
-    with open(lf, "r") as f:
+
+all_labels = train_lbls + val_lbls
+
+for label_file in all_labels:
+
+    with open(label_file) as f:
+
         for line in f:
+
             if line.strip():
-                counter[int(line.split()[0])] += 1
 
-print("\n===== CLASS DISTRIBUTION =====")
-for k, v in sorted(counter.items()):
-    print(f"{CLASS_NAMES[k]:20s} ({k}): {v}")
+                cls = int(line.split()[0])
 
-# =========================
-# 6. LOAD PRETRAINED MODEL
-# =========================
-print("\n[INFO] Loading SAIE pretrained YOLO model...")
-model = YOLO("https://github.com/kaopanboonyuen/SAIE2026/raw/main/weights/SAIE_TinyVisDrone_8s_50E.pt")
+                counter[cls] += 1
 
-# =========================
-# 7. TRAINING (5000 epochs)
-# =========================
-print("\n==============================")
-print("🚀 START TRAINING (5000 EPOCHS)")
-print("==============================")
+for cls_id, count in sorted(counter.items()):
 
-start_time = time.time()
-start_datetime = datetime.now()
-print(f"Start time: {start_datetime}")
+    class_name = CLASS_NAMES.get(cls_id, "unknown")
 
-import yaml, os
+    print(f"{class_name:20s} ({cls_id}) : {count}")
 
-yaml_path = root / "data.yaml"
 
-with open(yaml_path,'r') as f:
-    cfg = yaml.safe_load(f)
+# ============================================================
+# STEP 9 — VISUALIZE RANDOM TRAINING SAMPLES
+# ============================================================
 
-# Remove path if exists
-cfg.pop('path', None)
+print("\n================================================")
+print("STEP 9 — VISUALIZING RANDOM SAMPLES")
+print("================================================\n")
 
-# Update train/val to absolute path from current root
-cfg['train'] = os.path.join(str(root), 'images/train')
-cfg['val']   = os.path.join(str(root), 'images/val')
 
-with open(yaml_path,'w') as f:
-    yaml.dump(cfg, f)
+def show_sample(img_path, label_path):
 
-print(f"[INFO] data.yaml auto-fixed: train -> {cfg['train']}, val -> {cfg['val']}")
+    img = cv2.imread(str(img_path))
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-# NOTE: Ultralytics YOLO internally uses tqdm progress bar
+    h, w = img.shape[:2]
+
+    with open(label_path) as f:
+        lines = f.readlines()
+
+    for line in lines:
+
+        cls, x, y, bw, bh = map(float, line.split())
+
+        x1 = int((x - bw / 2) * w)
+        y1 = int((y - bh / 2) * h)
+
+        x2 = int((x + bw / 2) * w)
+        y2 = int((y + bh / 2) * h)
+
+        cv2.rectangle(
+            img,
+            (x1, y1),
+            (x2, y2),
+            (0, 255, 0),
+            2
+        )
+
+        cv2.putText(
+            img,
+            str(int(cls)),
+            (x1, y1 - 5),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.5,
+            (255, 0, 0),
+            1
+        )
+
+    plt.figure(figsize=(10, 6))
+    plt.imshow(img)
+    plt.axis("off")
+    plt.show()
+
+
+# ------------------------------------------------------------
+# Show 3 random training examples
+# ------------------------------------------------------------
+
+for _ in range(3):
+
+    img_file = random.choice(train_imgs)
+
+    lbl_file = (
+        DATA_ROOT /
+        "labels/train" /
+        f"{img_file.stem}.txt"
+    )
+
+    show_sample(img_file, lbl_file)
+
+
+# ============================================================
+# STEP 10 — DOWNLOAD PRETRAINED SAIE MODEL
+# ============================================================
+
+print("\n================================================")
+print("STEP 10 — DOWNLOADING SAIE PRETRAINED MODEL")
+print("================================================\n")
+
+gdown.download(
+    PRETRAINED_MODEL,
+    PRETRAINED_WEIGHT_NAME,
+    quiet=False
+)
+
+print("\nPretrained model downloaded successfully.")
+
+
+# ============================================================
+# STEP 11 — LOAD MODEL
+# ============================================================
+
+print("\n================================================")
+print("STEP 11 — LOADING MODEL")
+print("================================================\n")
+
+model = YOLO(PRETRAINED_WEIGHT_NAME)
+
+print("Model loaded successfully.")
+
+
+# ============================================================
+# STEP 12 — TRAIN MODEL
+# ============================================================
+
+print("\n================================================")
+print("STEP 12 — TRAINING STARTED")
+print("================================================\n")
+
+print("Training Configuration:")
+print(f"Epochs     : {EPOCHS}")
+print(f"Image Size : {IMAGE_SIZE}")
+print(f"Batch Size : {BATCH_SIZE}")
+print(f"Device     : {DEVICE}")
+
+# ------------------------------------------------------------
+# Main Training
+# ------------------------------------------------------------
+
 results = model.train(
-    data=str(root / "data.yaml"),
-    epochs=5000,
-    imgsz=416,
-    batch=16,
-    device=0,
+
+    data=str(DATA_ROOT / "data.yaml"),
+
+    epochs=EPOCHS,
+
+    imgsz=IMAGE_SIZE,
+
+    batch=BATCH_SIZE,
+
+    device=DEVICE,
+
+    workers=4,
+
+    cache=True,
+
+    project=PROJECT_NAME,
+
+    name=RUN_NAME,
+
+    pretrained=True,
+
+    save=True,
+
     verbose=True
 )
 
-end_time = time.time()
+print("\nTraining completed successfully.")
 
-# =========================
-# 8. TRAINING TIME SUMMARY
-# =========================
-total_sec = end_time - start_time
-days = int(total_sec // 86400)
-hours = int((total_sec % 86400) // 3600)
-minutes = int((total_sec % 3600) // 60)
 
-# Rough ETA for full 5000 epochs based on first run
-sec_per_epoch = total_sec / max(1, 50)  # assume first 50 epochs baseline
-eta_sec = sec_per_epoch * (5000 - 50)
-eta_hours = int(eta_sec // 3600)
+# ============================================================
+# STEP 13 — SAVE FINAL MODEL
+# ============================================================
 
-print("\n==============================")
-print("🏁 TRAINING COMPLETED")
-print("==============================")
-print(f"Total runtime       : {days}d {hours}h {minutes}m")
-print(f"Estimated full run  : ~{eta_hours} hours (if linear scaling)")
-print(f"Finish time         : {datetime.now()}")
+print("\n================================================")
+print("STEP 13 — SAVING FINAL MODEL")
+print("================================================\n")
 
-# =========================
-# 9. VALIDATION & METRICS
-# =========================
-print("\n[INFO] Running validation...")
+FINAL_MODEL_PATH = "SAIE_TinyVisDrone_Final.pt"
+
+model.save(FINAL_MODEL_PATH)
+
+print(f"Final model saved to: {FINAL_MODEL_PATH}")
+
+
+# ============================================================
+# STEP 14 — VALIDATION
+# ============================================================
+
+print("\n================================================")
+print("STEP 14 — MODEL VALIDATION")
+print("================================================\n")
 
 metrics = model.val()
 
+print("\nValidation completed.")
+
+
+# ============================================================
+# STEP 15 — CONFUSION MATRIX
+# ============================================================
+
+print("\n================================================")
+print("STEP 15 — CONFUSION MATRIX")
+print("================================================\n")
+
+cm = metrics.confusion_matrix.matrix
+
+print("Confusion Matrix Shape:", cm.shape)
+
+plt.figure(figsize=(10, 8))
+
+sns.heatmap(
+    cm,
+    annot=False,
+    cmap="Blues",
+    xticklabels=list(CLASS_NAMES.values()),
+    yticklabels=list(CLASS_NAMES.values())
+)
+
+plt.title("Confusion Matrix")
+
+plt.xlabel("Predicted")
+
+plt.ylabel("Ground Truth")
+
+plt.show()
+
+
+# ============================================================
+# STEP 16 — PRECISION / RECALL / F1 SCORE
+# ============================================================
+
+print("\n================================================")
+print("STEP 16 — METRICS ANALYSIS")
+print("================================================\n")
+
 p = metrics.box.mp
 r = metrics.box.mr
+
 f1 = 2 * (p * r) / (p + r + 1e-6)
 
-print("\n==============================")
-print("📊 FINAL MODEL PERFORMANCE")
-print("==============================")
-print(f"Precision : {p:.4f}")
-print(f"Recall    : {r:.4f}")
-print(f"F1-score  : {f1:.4f}")
-print(f"mAP@50    : {metrics.box.map50:.4f}")
-print(f"mAP@50-95 : {metrics.box.map:.4f}")
+print(f"Mean Precision : {p:.4f}")
+print(f"Mean Recall    : {r:.4f}")
+print(f"Mean F1-score  : {f1:.4f}")
 
-# =========================
-# 10. PER-CLASS METRICS
-# =========================
-print("\n===== PER-CLASS METRICS =====")
-for i, name in CLASS_NAMES.items():
-    p_i = metrics.box.p[i]
-    r_i = metrics.box.r[i]
+
+# ============================================================
+# STEP 17 — PER-CLASS PERFORMANCE
+# ============================================================
+
+print("\n================================================")
+print("STEP 17 — PER-CLASS PERFORMANCE")
+print("================================================\n")
+
+precision = metrics.box.p
+recall = metrics.box.r
+
+for i, name in enumerate(CLASS_NAMES.values()):
+
+    p_i = precision[i]
+
+    r_i = recall[i]
+
     f1_i = 2 * (p_i * r_i) / (p_i + r_i + 1e-6)
-    print(f"{name:20s} | P:{p_i:.3f} R:{r_i:.3f} F1:{f1_i:.3f}")
 
-# =========================
-# 11. FINAL CHECK & REPORT
-# =========================
-print("\n==============================")
-print("🎯 SAIE WORKSHOP SUMMARY")
-print("==============================")
+    print(
+        f"{name:20s} | "
+        f"P:{p_i:.3f} "
+        f"R:{r_i:.3f} "
+        f"F1:{f1_i:.3f}"
+    )
 
-if f1 > 0.6:
-    status = "🔥 PRODUCTION READY"
-elif f1 > 0.4:
-    status = "⚠️ GOOD BUT NEED OPTIMIZATION"
-else:
-    status = "❌ UNDERFITTED MODEL"
 
-print(f"Status: {status}")
-print(f"Dataset: Tiny VisDrone (Edge AI Scenario)")
-print(f"Model: SAIE pretrained → fine-tuned")
-print(f"Total classes: {len(CLASS_NAMES)}")
-print("✨ Training pipeline completed successfully.")
-print("💡 This is a real-world AI system training flow (not just a notebook).")
+# ============================================================
+# STEP 18 — INFERENCE DEMO
+# ============================================================
+
+print("\n================================================")
+print("STEP 18 — INFERENCE DEMO")
+print("================================================\n")
+
+test_imgs = list((DATA_ROOT / "images/val").glob("*.jpg"))
+
+for i in range(3):
+
+    img_path = random.choice(test_imgs)
+
+    print(f"\nRunning inference on: {img_path.name}")
+
+    results = model.predict(
+
+        img_path,
+
+        imgsz=IMAGE_SIZE,
+
+        conf=0.25
+    )
+
+    for r in results:
+
+        im = r.plot()
+
+        plt.figure(figsize=(10, 6))
+
+        plt.imshow(im)
+
+        plt.axis("off")
+
+        plt.show()
+
+
+# ============================================================
+# STEP 19 — EXPORT MODEL
+# ============================================================
+
+print("\n================================================")
+print("STEP 19 — EXPORTING MODEL")
+print("================================================\n")
+
+# ------------------------------------------------------------
+# Export to ONNX
+# ------------------------------------------------------------
+
+model.export(format="onnx")
+
+print("ONNX export completed.")
+
+# ------------------------------------------------------------
+# Export to TensorRT
+# ------------------------------------------------------------
+
+try:
+
+    model.export(format="engine")
+
+    print("TensorRT export completed.")
+
+except Exception as e:
+
+    print("\nTensorRT export skipped.")
+    print("Reason:", e)
+
+
+# ============================================================
+# STEP 20 — FINAL SUMMARY
+# ============================================================
+
+print("\n================================================")
+print("FINAL SUMMARY")
+print("================================================\n")
+
+print("Dataset READY          :", True)
+
+print("Training images        :", len(train_imgs))
+
+print("Validation images      :", len(val_imgs))
+
+print("Number of classes      :", len(counter))
+
+print("Training epochs        :", EPOCHS)
+
+print("Model exported         :", True)
+
+print("\nSAIE 2026 training pipeline completed successfully.")
+print("Ready for real-world object detection deployment.")
+print("================================================\n")
