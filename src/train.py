@@ -1,16 +1,18 @@
 """
-SAIE2026 Workshop Training Pipeline (PRO MODE)
+SAIE2026 Workshop Training Pipeline (FULL PRODUCTION READY)
 
-Features:
-- Dataset auto-load
-- EDA stats
-- YOLO pretrained training
-- 5000 epochs long-run training
-- Live progress + ETA estimation
-- Final performance report
+Theme:
+AI in the Real World: Trade-offs Behind Fast & Scalable Object Detection
 
-Designed for:
-🔥 EC2 / GPU server / workshop demo
+This script demonstrates:
+1. Dataset auto-download and validation
+2. Exploratory Data Analysis (EDA)
+3. Auto-fix data.yaml for Colab/EC2 compatibility
+4. Pretrained YOLO model training (5000 epochs)
+5. Metrics logging: Precision, Recall, F1, mAP
+6. Final report with ETA and runtime summary
+
+Designed for EC2 / Colab GPU runs for workshop demonstration
 """
 
 # =========================
@@ -29,18 +31,15 @@ from ultralytics import YOLO
 # =========================
 # 2. DOWNLOAD DATASET
 # =========================
-# print("\n[INFO] Downloading dataset...")
+print("\n[INFO] Downloading SAE TinyVisDrone dataset...")
+url = "https://github.com/kaopanboonyuen/SAIE2026/raw/main/dataset/SAE_TinyVisDroneFinal.zip"
+output = "SAE_TinyVisDroneFinal.zip"
+gdown.download(url, output, quiet=False)
 
-# url = "https://github.com/kaopanboonyuen/SAIE2026/raw/main/dataset/SAE_TinyVisDroneFinal.zip"
-# output = "SAE_TinyVisDroneFinal.zip"
-
-# gdown.download(url, output, quiet=False)
-
-# with zipfile.ZipFile(output, "r") as zip_ref:
-#     zip_ref.extractall(".")
-
-# print("[INFO] Dataset ready: SAE_TinyVisDroneFinal/")
-
+# Extract ZIP directly to current folder
+with zipfile.ZipFile(output, "r") as zip_ref:
+    zip_ref.extractall(".")
+print("[INFO] Dataset extracted to SAE_TinyVisDroneFinal/")
 
 # =========================
 # 3. LOAD DATASET
@@ -48,31 +47,36 @@ from ultralytics import YOLO
 root = Path("SAE_TinyVisDroneFinal")
 
 train_imgs = list((root / "images/train").glob("*.jpg"))
-val_imgs   = list((root / "images/val").glob("*.jpg"))
+val_imgs = list((root / "images/val").glob("*.jpg"))
 train_lbls = list((root / "labels/train").glob("*.txt"))
-val_lbls   = list((root / "labels/val").glob("*.txt"))
+val_lbls = list((root / "labels/val").glob("*.txt"))
 
 print("\n===== DATASET STATS =====")
 print(f"Train images: {len(train_imgs)}")
 print(f"Val images  : {len(val_imgs)}")
 
-
+# =========================
+# 4. AUTO-FIX data.yaml
+# =========================
 yaml_path = root / "data.yaml"
-with open(yaml_path,'r') as f:
+
+with open(yaml_path, 'r') as f:
     cfg = yaml.safe_load(f)
 
+# Remove any existing 'path' to avoid double-folder issue
 cfg.pop('path', None)
+
+# Set absolute paths for train/val to current root folder
 cfg['train'] = os.path.join(str(root), 'images/train')
 cfg['val']   = os.path.join(str(root), 'images/val')
 
-with open(yaml_path,'w') as f:
+with open(yaml_path, 'w') as f:
     yaml.dump(cfg, f)
 
-print("[INFO] data.yaml updated with correct paths")
-
+print(f"[INFO] data.yaml auto-fixed: train -> {cfg['train']}, val -> {cfg['val']}")
 
 # =========================
-# 4. CLASS DISTRIBUTION
+# 5. CLASS DISTRIBUTION
 # =========================
 CLASS_NAMES = {
     0: "pedestrian", 1: "people", 2: "bicycle", 3: "car", 4: "van",
@@ -90,19 +94,14 @@ print("\n===== CLASS DISTRIBUTION =====")
 for k, v in sorted(counter.items()):
     print(f"{CLASS_NAMES[k]:20s} ({k}): {v}")
 
+# =========================
+# 6. LOAD PRETRAINED MODEL
+# =========================
+print("\n[INFO] Loading SAIE pretrained YOLO model...")
+model = YOLO("https://github.com/kaopanboonyuen/SAIE2026/raw/main/weights/SAIE_TinyVisDrone_8s_50E.pt")
 
 # =========================
-# 5. LOAD PRETRAINED MODEL
-# =========================
-print("\n[INFO] Loading SAIE pretrained model...")
-
-model = YOLO(
-    "https://github.com/kaopanboonyuen/SAIE2026/raw/main/weights/SAIE_TinyVisDrone_8s_50E.pt"
-)
-
-
-# =========================
-# 6. TRAINING (WITH ETA SYSTEM)
+# 7. TRAINING (5000 epochs)
 # =========================
 print("\n==============================")
 print("🚀 START TRAINING (5000 EPOCHS)")
@@ -110,13 +109,9 @@ print("==============================")
 
 start_time = time.time()
 start_datetime = datetime.now()
-
 print(f"Start time: {start_datetime}")
 
-# NOTE:
-# Ultralytics handles internal tqdm progress bar already
-# We add external "training expectation tracker"
-
+# NOTE: Ultralytics YOLO internally uses tqdm progress bar
 results = model.train(
     data=str(root / "data.yaml"),
     epochs=5000,
@@ -129,31 +124,27 @@ results = model.train(
 end_time = time.time()
 
 # =========================
-# 7. TRAINING TIME SUMMARY
+# 8. TRAINING TIME SUMMARY
 # =========================
 total_sec = end_time - start_time
-
 days = int(total_sec // 86400)
 hours = int((total_sec % 86400) // 3600)
 minutes = int((total_sec % 3600) // 60)
 
-# rough ETA estimation for full 5000 epochs
-sec_per_epoch = total_sec / max(1, 50)   # assuming first run baseline ~50 epochs
+# Rough ETA for full 5000 epochs based on first run
+sec_per_epoch = total_sec / max(1, 50)  # assume first 50 epochs baseline
 eta_sec = sec_per_epoch * (5000 - 50)
-
 eta_hours = int(eta_sec // 3600)
 
 print("\n==============================")
 print("🏁 TRAINING COMPLETED")
 print("==============================")
-
-print(f"Total runtime     : {days}d {hours}h {minutes}m")
-print(f"Estimated full run : ~{eta_hours} hours (if linear scaling)")
-print(f"Finish time       : {datetime.now()}")
-
+print(f"Total runtime       : {days}d {hours}h {minutes}m")
+print(f"Estimated full run  : ~{eta_hours} hours (if linear scaling)")
+print(f"Finish time         : {datetime.now()}")
 
 # =========================
-# 8. VALIDATION
+# 9. VALIDATION & METRICS
 # =========================
 print("\n[INFO] Running validation...")
 
@@ -166,16 +157,24 @@ f1 = 2 * (p * r) / (p + r + 1e-6)
 print("\n==============================")
 print("📊 FINAL MODEL PERFORMANCE")
 print("==============================")
-
 print(f"Precision : {p:.4f}")
 print(f"Recall    : {r:.4f}")
 print(f"F1-score  : {f1:.4f}")
 print(f"mAP@50    : {metrics.box.map50:.4f}")
 print(f"mAP@50-95 : {metrics.box.map:.4f}")
 
+# =========================
+# 10. PER-CLASS METRICS
+# =========================
+print("\n===== PER-CLASS METRICS =====")
+for i, name in CLASS_NAMES.items():
+    p_i = metrics.box.p[i]
+    r_i = metrics.box.r[i]
+    f1_i = 2 * (p_i * r_i) / (p_i + r_i + 1e-6)
+    print(f"{name:20s} | P:{p_i:.3f} R:{r_i:.3f} F1:{f1_i:.3f}")
 
 # =========================
-# 9. FINAL IMPRESS SUMMARY (KEY FOR WORKSHOP)
+# 11. FINAL CHECK & REPORT
 # =========================
 print("\n==============================")
 print("🎯 SAIE WORKSHOP SUMMARY")
@@ -192,6 +191,5 @@ print(f"Status: {status}")
 print(f"Dataset: Tiny VisDrone (Edge AI Scenario)")
 print(f"Model: SAIE pretrained → fine-tuned")
 print(f"Total classes: {len(CLASS_NAMES)}")
-
-print("\n✨ Training pipeline completed successfully.")
+print("✨ Training pipeline completed successfully.")
 print("💡 This is a real-world AI system training flow (not just a notebook).")
