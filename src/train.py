@@ -346,29 +346,35 @@ print(f"Device     : {DEVICE}")
 
 results = model.train(
 
-    data=str(DATA_ROOT / "data.yaml"),
+    data=str(yaml_path),
 
-    epochs=EPOCHS,
+    epochs=5000,
 
-    imgsz=IMAGE_SIZE,
+    imgsz=416,
 
-    batch=BATCH_SIZE,
+    batch=16,
 
-    device=DEVICE,
+    device=0,
 
-    workers=4,
+    workers=8,
 
-    cache=True,
+    cache="ram",
 
-    project=PROJECT_NAME,
-
-    name=RUN_NAME,
+    amp=True,
 
     pretrained=True,
 
     save=True,
 
-    verbose=True
+    save_period=25,
+
+    cos_lr=True,
+
+    patience=300,
+
+    project="SAIE2026",
+
+    name="TinyVisDrone_5000E"
 )
 
 print("\nTraining completed successfully.")
