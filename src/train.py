@@ -111,6 +111,25 @@ start_time = time.time()
 start_datetime = datetime.now()
 print(f"Start time: {start_datetime}")
 
+import yaml, os
+
+yaml_path = root / "data.yaml"
+
+with open(yaml_path,'r') as f:
+    cfg = yaml.safe_load(f)
+
+# Remove path if exists
+cfg.pop('path', None)
+
+# Update train/val to absolute path from current root
+cfg['train'] = os.path.join(str(root), 'images/train')
+cfg['val']   = os.path.join(str(root), 'images/val')
+
+with open(yaml_path,'w') as f:
+    yaml.dump(cfg, f)
+
+print(f"[INFO] data.yaml auto-fixed: train -> {cfg['train']}, val -> {cfg['val']}")
+
 # NOTE: Ultralytics YOLO internally uses tqdm progress bar
 results = model.train(
     data=str(root / "data.yaml"),
