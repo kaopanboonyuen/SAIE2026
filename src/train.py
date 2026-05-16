@@ -349,7 +349,7 @@ results = model.train(
 
     data=str(yaml_path),
 
-    epochs=5000,
+    epochs=5,
 
     imgsz=416,
 
