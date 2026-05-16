@@ -19,6 +19,7 @@ Designed for:
 import gdown
 import zipfile
 import time
+import yaml, os
 from pathlib import Path
 from collections import Counter
 from datetime import datetime
@@ -54,6 +55,20 @@ val_lbls   = list((root / "labels/val").glob("*.txt"))
 print("\n===== DATASET STATS =====")
 print(f"Train images: {len(train_imgs)}")
 print(f"Val images  : {len(val_imgs)}")
+
+
+yaml_path = root / "data.yaml"
+with open(yaml_path,'r') as f:
+    cfg = yaml.safe_load(f)
+
+cfg.pop('path', None)
+cfg['train'] = os.path.join(str(root), 'images/train')
+cfg['val']   = os.path.join(str(root), 'images/val')
+
+with open(yaml_path,'w') as f:
+    yaml.dump(cfg, f)
+
+print("[INFO] data.yaml updated with correct paths")
 
 
 # =========================
