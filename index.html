@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>SAIE 2026 — AI in the Real World</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌳</text></svg>">
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      font-family:'Inter',sans-serif;
+      background:#ffffff;
+      color:#111827;
+      overflow-x:hidden;
+      line-height:1.7;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    .container{
+      width:90%;
+      max-width:1300px;
+      margin:auto;
+    }
+
+    /* ========================= */
+    /* BACKGROUND EFFECTS */
+    /* ========================= */
+
+    .blur-circle{
+      position:fixed;
+      border-radius:50%;
+      filter:blur(120px);
+      z-index:-1;
+      opacity:0.12;
+      animation:float 8s ease-in-out infinite;
+    }
+
+    .circle1{
+      width:300px;
+      height:300px;
+      background:#60a5fa;
+      top:-100px;
+      left:-100px;
+    }
+
+    .circle2{
+      width:400px;
+      height:400px;
+      background:#c084fc;
+      bottom:-150px;
+      right:-120px;
+      animation-delay:2s;
+    }
+
+    @keyframes float{
+      0%{transform:translateY(0px);}
+      50%{transform:translateY(25px);}
+      100%{transform:translateY(0px);}
+    }
+
+    /* ========================= */
+    /* NAVBAR */
+    /* ========================= */
+
+    nav{
+      position:fixed;
+      top:0;
+      width:100%;
+      z-index:999;
+      backdrop-filter:blur(12px);
+      background:rgba(255,255,255,0.8);
+      border-bottom:1px solid rgba(0,0,0,0.05);
+    }
+
+    .nav-content{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:18px 0;
+    }
+
+    .logo{
+      font-size:1.1rem;
+      font-weight:800;
+      letter-spacing:-0.5px;
+    }
+
+    .logo span{
+      color:#2563eb;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:24px;
+    }
+
+    .nav-links a{
+      font-size:0.95rem;
+      color:#374151;
+      transition:0.3s;
+      font-weight:500;
+    }
+
+    .nav-links a:hover{
+      color:#2563eb;
+    }
+
+    /* ========================= */
+    /* HERO */
+    /* ========================= */
+
+    .hero{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      position:relative;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.2fr 0.8fr;
+      gap:60px;
+      align-items:center;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 18px;
+      border-radius:999px;
+      background:#eff6ff;
+      color:#2563eb;
+      font-weight:600;
+      font-size:0.9rem;
+      margin-bottom:24px;
+      border:1px solid #dbeafe;
+    }
+
+    .hero h1{
+      font-size:4.3rem;
+      line-height:1.05;
+      letter-spacing:-2px;
+      margin-bottom:26px;
+      font-weight:800;
+    }
+
+    .gradient{
+      background:linear-gradient(90deg,#2563eb,#7c3aed);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .hero p{
+      font-size:1.15rem;
+      color:#4b5563;
+      margin-bottom:36px;
+      max-width:760px;
+    }
+
+    .hero-buttons{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      padding:15px 28px;
+      border-radius:14px;
+      font-weight:700;
+      transition:0.35s;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .btn-primary{
+      background:#111827;
+      color:white;
+      box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-4px);
+    }
+
+    .btn-outline{
+      border:1px solid #d1d5db;
+      color:#111827;
+      background:white;
+    }
+
+    .btn-outline:hover{
+      background:#f9fafb;
+      transform:translateY(-4px);
+    }
+
+    .hero-card{
+      background:white;
+      border:1px solid rgba(0,0,0,0.06);
+      border-radius:28px;
+      padding:38px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.06);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-card::before{
+      content:'';
+      position:absolute;
+      width:220px;
+      height:220px;
+      background:linear-gradient(135deg,#60a5fa,#c084fc);
+      border-radius:50%;
+      top:-80px;
+      right:-80px;
+      opacity:0.15;
+    }
+
+    .hero-card h3{
+      font-size:1.3rem;
+      margin-bottom:16px;
+    }
+
+    .hero-card ul{
+      list-style:none;
+    }
+
+    .hero-card li{
+      margin-bottom:14px;
+      color:#374151;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+
+    /* ========================= */
+    /* SECTION */
+    /* ========================= */
+
+    section{
+      padding:120px 0;
+    }
+
+    .section-title{
+      font-size:3rem;
+      font-weight:800;
+      letter-spacing:-1.5px;
+      margin-bottom:16px;
+    }
+
+    .section-desc{
+      max-width:820px;
+      color:#6b7280;
+      font-size:1.08rem;
+      margin-bottom:60px;
+    }
+
+    /* ========================= */
+    /* CARDS */
+    /* ========================= */
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:26px;
+    }
+
+    .card{
+      background:white;
+      border:1px solid rgba(0,0,0,0.06);
+      border-radius:24px;
+      padding:30px;
+      transition:0.35s;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card:hover{
+      transform:translateY(-8px);
+      box-shadow:0 18px 45px rgba(0,0,0,0.08);
+    }
+
+    .card h3{
+      font-size:1.3rem;
+      margin-bottom:14px;
+    }
+
+    .card p{
+      color:#6b7280;
+      font-size:0.98rem;
+    }
+
+    .tag{
+      display:inline-block;
+      padding:6px 12px;
+      background:#f3f4f6;
+      border-radius:999px;
+      font-size:0.8rem;
+      font-weight:600;
+      margin-bottom:18px;
+      color:#374151;
+    }
+
+    /* ========================= */
+    /* TIMELINE */
+    /* ========================= */
+
+    .timeline{
+      border-left:3px solid #e5e7eb;
+      margin-top:40px;
+      padding-left:30px;
+    }
+
+    .timeline-item{
+      margin-bottom:40px;
+      position:relative;
+    }
+
+    .timeline-item::before{
+      content:'';
+      position:absolute;
+      left:-39px;
+      top:6px;
+      width:16px;
+      height:16px;
+      background:#2563eb;
+      border-radius:50%;
+    }
+
+    .timeline-item h4{
+      font-size:1.2rem;
+      margin-bottom:8px;
+    }
+
+    .timeline-item p{
+      color:#6b7280;
+    }
+
+    /* ========================= */
+    /* FOOTER */
+    /* ========================= */
+
+    footer{
+      padding:80px 0;
+      text-align:center;
+      border-top:1px solid rgba(0,0,0,0.06);
+    }
+
+    footer h2{
+      font-size:2.4rem;
+      margin-bottom:16px;
+    }
+
+    footer p{
+      color:#6b7280;
+      margin-bottom:28px;
+    }
+
+    .footer-note{
+      margin-top:40px;
+      font-size:0.9rem;
+      color:#9ca3af;
+    }
+
+    /* ========================= */
+    /* ANIMATION */
+    /* ========================= */
+
+    .fade-up{
+      opacity:0;
+      transform:translateY(30px);
+      animation:fadeUp 1s ease forwards;
+    }
+
+    .delay1{animation-delay:0.2s;}
+    .delay2{animation-delay:0.4s;}
+    .delay3{animation-delay:0.6s;}
+
+    @keyframes fadeUp{
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    /* ========================= */
+    /* RESPONSIVE */
+    /* ========================= */
+
+    @media(max-width:980px){
+
+      .hero-grid{
+        grid-template-columns:1fr;
+      }
+
+      .hero h1{
+        font-size:3rem;
+      }
+
+      .section-title{
+        font-size:2.2rem;
+      }
+
+      .nav-links{
+        display:none;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="blur-circle circle1"></div>
+  <div class="blur-circle circle2"></div>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="container nav-content">
+      <div class="logo">
+        SAIE<span>2026</span>
+      </div>
+
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#labs">Labs</a>
+        <a href="#philosophy">Philosophy</a>
+        <a href="#lecturer">Lecturer</a>
+        <a href="#resources">Resources</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+
+    <!-- LEFT -->
+    <div>
+
+      <div class="badge fade-up">
+        🚀 Super AI Engineer Thailand 2026
+      </div>
+
+      <h1 class="fade-up delay1">
+        AI in the Real World
+        <br>
+        <span class="gradient">
+          Fast & Scalable Object Detection
+        </span>
+      </h1>
+
+      <p class="fade-up delay2">
+        Workshop designed for the next generation of Thai AI engineers.
+        Learn how modern object detection systems are optimized,
+        compressed, accelerated, and deployed under real industrial constraints.
+      </p>
+
+      <!-- COOL NAME TAG -->
+      <div class="fade-up delay3" style="
+        margin-top:26px;
+        display:inline-flex;
+        align-items:center;
+        gap:12px;
+        padding:12px 18px;
+        border:1px solid rgba(0,0,0,0.06);
+        border-radius:999px;
+        background:rgba(255,255,255,0.85);
+        backdrop-filter:blur(10px);
+        box-shadow:0 8px 30px rgba(0,0,0,0.05);
+      ">
+
+        <span style="
+          width:10px;
+          height:10px;
+          border-radius:50%;
+          background:#22c55e;
+          display:inline-block;
+          animation:pulse 2s infinite;
+        "></span>
+
+        <span style="
+          font-weight:600;
+          color:#111827;
+        ">
+          Lecture by
+          <span class="gradient">
+            P’Kao — Teerapong Panboonyuen, Ph.D.
+          </span>
+        </span>
+
+      </div>
+
+      <!-- BUTTONS -->
+      <div class="hero-buttons fade-up delay3" style="margin-top:32px;">
+
+        <a class="btn btn-primary"
+           href="https://github.com/kaopanboonyuen/SAIE2026"
+           target="_blank">
+           ⭐ GitHub Repository
+        </a>
+
+        <a class="btn btn-outline"
+           href="https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb"
+           target="_blank">
+           📓 Open Colab
+        </a>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="hero-card fade-up delay2">
+
+      <h3>🎯 What Students Will Learn</h3>
+
+      <ul>
+        <li>⚡ Latency vs Accuracy Trade-offs</li>
+        <li>🧠 Knowledge Distillation</li>
+        <li>✂️ Structured Pruning</li>
+        <li>🔢 INT8 / FP16 Quantization</li>
+        <li>📹 Multi-Camera Deployment</li>
+        <li>🚀 Real-Time AI Optimization</li>
+        <li>🏗️ Industrial AI Engineering Mindset</li>
+      </ul>
+
+    </div>
+
+  </div>
+</section>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <div class="container">
+
+      <h2 class="section-title">
+        🌏 Workshop Overview
+      </h2>
+
+      <p class="section-desc">
+        Unlike typical tutorials focused only on benchmark accuracy,
+        this workshop explores the hidden engineering trade-offs behind
+        deploying scalable object detection systems in production.
+        Students will experience how real AI products are engineered
+        under computational, memory, and deployment constraints.
+      </p>
+
+      <div class="grid">
+
+        <div class="card">
+          <div class="tag">Performance</div>
+          <h3>⚡ Latency vs Accuracy</h3>
+          <p>
+            Understand how detection systems balance inference speed,
+            throughput, and accuracy in real-time environments.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="tag">Optimization</div>
+          <h3>✂️ Model Compression</h3>
+          <p>
+            Learn pruning, quantization, and lightweight architecture
+            design for efficient deployment.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="tag">Deployment</div>
+          <h3>📹 Scalable AI Systems</h3>
+          <p>
+            Explore production-scale pipelines,
+            multi-camera inference,
+            and GPU scheduling strategies.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LABS -->
+  <section id="labs">
+
+    <div class="container">
+
+      <h2 class="section-title">
+        🧪 Workshop Curriculum
+      </h2>
+
+      <p class="section-desc">
+        Six hands-on labs covering optimization techniques,
+        scalable deployment, and industrial computer vision systems.
+      </p>
+
+      <div class="timeline">
+
+        <div class="timeline-item">
+          <h4>⚡ Lab 1 — Baseline Profiling</h4>
+          <p>
+            Benchmark latency, FLOPs, FPS, and mAP across different YOLO variants.
+          </p>
+        </div>
+
+        <div class="timeline-item">
+          <h4>✂️ Lab 2 — Structured Pruning</h4>
+          <p>
+            Compress object detection models while preserving performance.
+          </p>
+        </div>
+
+        <div class="timeline-item">
+          <h4>🔢 Lab 3 — Quantization</h4>
+          <p>
+            Deploy INT8 and FP16 optimized detectors for faster inference.
+          </p>
+        </div>
+
+        <div class="timeline-item">
+          <h4>🧠 Lab 4 — Knowledge Distillation</h4>
+          <p>
+            Transfer knowledge from large teacher models to compact student networks.
+          </p>
+        </div>
+
+        <div class="timeline-item">
+          <h4>🏗️ Lab 5 — Architecture Design</h4>
+          <p>
+            Design scalable multi-scale detection heads and efficient backbones.
+          </p>
+        </div>
+
+        <div class="timeline-item">
+          <h4>📹 Lab 6 — Multi-Camera Deployment</h4>
+          <p>
+            Build scalable AI pipelines for production-scale video analytics systems.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- PHILOSOPHY -->
+  <section id="philosophy">
+
+    <div class="container">
+
+      <h2 class="section-title">
+        🧠 Educational Philosophy
+      </h2>
+
+      <p class="section-desc">
+        This workshop goes beyond academic toy examples.
+        Students will experience real deployment constraints,
+        engineering trade-offs, and industrial AI thinking.
+      </p>
+
+      <div class="card">
+
+        <h3 style="font-size:2rem;margin-bottom:20px;">
+          “A model that is accurate but unusable in production is not enough.”
+        </h3>
+
+        <p style="font-size:1.05rem;">
+          The future of AI engineering is not only about building larger models,
+          but building systems that are deployable, scalable,
+          efficient, and practical in the real world.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- LECTURER -->
+  <section id="lecturer">
+
+    <div class="container">
+
+      <h2 class="section-title">
+        👨‍🏫 Lecturer
+      </h2>
+
+      <div class="card">
+
+        <h3>
+          Teerapong Panboonyuen, Ph.D. (P'Kao)
+        </h3>
+
+        <p style="margin-top:12px;">
+          Chulalongkorn University, Thailand
+        </p>
+
+        <p style="margin-top:10px;">
+          Research Focus:
+          Efficient AI Systems • Computer Vision • Remote Sensing •
+          Edge AI • Industrial Deep Learning
+        </p>
+
+        <div style="margin-top:28px;display:flex;gap:16px;flex-wrap:wrap;">
+
+          <a class="btn btn-primary"
+             href="https://github.com/kaopanboonyuen"
+             target="_blank">
+             GitHub
+          </a>
+
+          <a class="btn btn-outline"
+             href="mailto:teerapong.pa@chula.ac.th">
+             Contact
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- RESOURCES -->
+  <section id="resources">
+
+    <div class="container">
+
+      <h2 class="section-title">
+        📚 Resources
+      </h2>
+
+      <div class="grid">
+
+        <div class="card">
+          <div class="tag">Slides</div>
+          <h3>🎤 Lecture Slides</h3>
+
+          <p>
+            Complete lecture slides for AI optimization,
+            deployment strategies,
+            and scalable object detection systems.
+          </p>
+
+          <div style="margin-top:24px;">
+            <a class="btn btn-primary"
+               href="https://github.com/kaopanboonyuen/SAIE2026/blob/main/slides/SAIE2026_ObjectDetection_PanboonyuenLecture.pdf"
+               target="_blank">
+               View Slides
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tag">Hands-on</div>
+          <h3>📓 Colab Notebook</h3>
+
+          <p>
+            Interactive workshop notebook for profiling,
+            pruning, quantization,
+            and deployment experiments.
+          </p>
+
+          <div style="margin-top:24px;">
+            <a class="btn btn-primary"
+               href="https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb"
+               target="_blank">
+               Open Colab
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="tag">Repository</div>
+          <h3>🚀 GitHub Repository</h3>
+
+          <p>
+            Official workshop repository containing lecture materials,
+            notebooks, and educational resources.
+          </p>
+
+          <div style="margin-top:24px;">
+            <a class="btn btn-primary"
+               href="https://github.com/kaopanboonyuen/SAIE2026"
+               target="_blank">
+               Visit GitHub
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+
+    <div class="container">
+
+      <h2>
+        🚀 Build AI That Works In The Real World
+      </h2>
+
+      <p>
+        Fast • Efficient • Scalable • Deployable
+      </p>
+
+      <a class="btn btn-primary"
+         href="https://github.com/kaopanboonyuen/SAIE2026"
+         target="_blank">
+         ⭐ Star Repository
+      </a>
+
+      <div class="footer-note">
+        © 2026 SAIE Workshop — Teerapong Panboonyuen
+      </div>
+
+    </div>
+
+  </footer>
+
+</body>
+</html>
