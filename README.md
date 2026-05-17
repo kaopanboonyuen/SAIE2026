@@ -1,39 +1,34 @@
 # 🚀 SAIE 2026 — AI in the Real World
 ## Trade-offs Behind Fast & Scalable Object Detection
 
-<div align="center">
-
 🎓 **Super AI Engineer Thailand 2026 (SAIE 2026)**  
 🧠 Real-World Computer Vision Workshop Series  
 ⚡ From Research → Optimization → Deployment  
 
-<br>
+---
 
 ## 👨‍🏫 Author & Lecturer
 
-**Teerapong Panboonyuen, Ph.D. (P'Kao)**
-
+**Teerapong Panboonyuen, Ph.D. (P'Kao)**  
 📍 Chulalongkorn University, Thailand  
 📫 `teerapong [dot] pa [at] chula [dot] ac [dot] th`
 
 🌐 Repository  
 https://github.com/kaopanboonyuen/SAIE2026
 
-<br>
+📓 Google Colab  
+https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb)
+📄 Lecture Slides  
+https://github.com/kaopanboonyuen/SAIE2026/blob/main/slides/SAIE2026_ObjectDetection_PanboonyuenLecture.pdf
 
-[![Lecture Slides](https://img.shields.io/badge/View-Lecture_Slides-red?style=for-the-badge)](https://github.com/kaopanboonyuen/SAIE2026/blob/main/slides/SAIE2026_ObjectDetection_PanboonyuenLecture.pdf)
-
-<br>
+---
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
 ![PyTorch](https://img.shields.io/badge/PyTorch-DeepLearning-red.svg)
 ![YOLO](https://img.shields.io/badge/YOLO-ObjectDetection-green.svg)
 ![GPU](https://img.shields.io/badge/GPU-Accelerated-orange.svg)
 ![License](https://img.shields.io/badge/License-Educational-lightgrey.svg)
-
-</div>
 
 ---
 
