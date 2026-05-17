@@ -77,7 +77,7 @@ SAIE2026/
 
 ## 🎤 Main Lecture Slides
 
-📄 [SAIE2026_ObjectDetection_PanboonyuenLecture.pdf](https://github.com/kaopanboonyuen/SAIE2026/blob/main/slides/SAIE2026_ObjectDetection_PanboonyuenLecture.pdf)
+[![View Lecture Slides](https://img.shields.io/badge/View-Lecture_Slides-red?style=for-the-badge)](https://github.com/kaopanboonyuen/SAIE2026/blob/main/slides/SAIE2026_ObjectDetection_PanboonyuenLecture.pdf)
 
 Topics include:
 
@@ -97,6 +97,12 @@ Topics include:
 # Table of Contents
 
 ## ⭐ SAIE 2026 — Super AI Engineer Thailand
+
+### 📓 Open Workshop Notebook
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb)
+
+---
 
 ### 🛠️ SETUP — Environment, Dataset & Pretrained Model
 - Python Environment
