@@ -16,11 +16,11 @@
 🌐 Repository  
 https://github.com/kaopanboonyuen/SAIE2026
 
-📓 Google Colab  
-https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb
-
 📄 Lecture Slides  
 https://github.com/kaopanboonyuen/SAIE2026/blob/main/slides/SAIE2026_ObjectDetection_PanboonyuenLecture.pdf
+
+📓 Google Colab  
+https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb
 
 ---
 
