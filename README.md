@@ -3,22 +3,27 @@
 
 <div align="center">
 
-# 🎓 Super AI Engineer Thailand 2026 (SAIE 2026)
-
-### 🧠 Real-World Computer Vision Workshop Series
-### ⚡ From Research → Optimization → Deployment
+🎓 **Super AI Engineer Thailand 2026 (SAIE 2026)**  
+🧠 Real-World Computer Vision Workshop Series  
+⚡ From Research → Optimization → Deployment  
 
 <br>
 
 ## 👨‍🏫 Author & Lecturer
 
-### **Teerapong Panboonyuen, Ph.D. (P'Kao)**
+**Teerapong Panboonyuen, Ph.D. (P'Kao)**
 
 📍 Chulalongkorn University, Thailand  
 📫 `teerapong [dot] pa [at] chula [dot] ac [dot] th`
 
-🌐 GitHub:  
+🌐 Repository  
 https://github.com/kaopanboonyuen/SAIE2026
+
+<br>
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb)
+
+[![Lecture Slides](https://img.shields.io/badge/View-Lecture_Slides-red?style=for-the-badge)](https://github.com/kaopanboonyuen/SAIE2026/blob/main/slides/SAIE2026_ObjectDetection_PanboonyuenLecture.pdf)
 
 <br>
 
@@ -68,8 +73,6 @@ SAIE2026/
 │
 ├── datasets/
 │
-├── outputs/
-│
 └── README.md
 ```
 
@@ -79,7 +82,7 @@ SAIE2026/
 
 ## 🎤 Main Lecture Slides
 
-📄 `slides/SAIE2026_ObjectDetection_PanboonyuenLecture.pdf`
+📄 [SAIE2026_ObjectDetection_PanboonyuenLecture.pdf](https://github.com/kaopanboonyuen/SAIE2026/blob/main/slides/SAIE2026_ObjectDetection_PanboonyuenLecture.pdf)
 
 Topics include:
 
@@ -231,6 +234,12 @@ cd SAIE2026
 
 ## 2️⃣ Open Workshop Notebook
 
+### 🔗 Google Colab
+
+https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb
+
+### 🔗 Local Notebook
+
 ```bash
 notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb
 ```
@@ -335,9 +344,9 @@ If you find this lecture, workshop, repository, or educational material useful i
 
 <div align="center">
 
-# 🚀 Build AI That Works In The Real World
+🚀 **Build AI That Works In The Real World**
 
-### Fast. Efficient. Scalable. Deployable.
+Fast • Efficient • Scalable • Deployable
 
 ⭐ If this workshop helps you, consider starring the repository!
 
