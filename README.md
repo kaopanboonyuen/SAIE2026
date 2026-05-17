@@ -7,7 +7,7 @@
 
 ---
 
-## 👨‍🏫 Author & Lecturer
+## 👨‍💻 Author
 
 **Teerapong Panboonyuen, Ph.D. (P'Kao)**  
 📍 Chulalongkorn University, Thailand  
@@ -16,11 +16,15 @@
 🌐 Repository  
 https://github.com/kaopanboonyuen/SAIE2026
 
-📄 Lecture Slides  
-https://github.com/kaopanboonyuen/SAIE2026/blob/main/slides/SAIE2026_ObjectDetection_PanboonyuenLecture.pdf
+---
 
-📓 Google Colab  
-https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb
+## 👨‍🏫 Lecture Materials
+
+📄 Lecture Slides  
+[![View Lecture Slides](https://img.shields.io/badge/View-Lecture_Slides-red?style=for-the-badge)](https://github.com/kaopanboonyuen/SAIE2026/blob/main/slides/SAIE2026_ObjectDetection_PanboonyuenLecture.pdf)
+
+📓 Google Colab Notebook  
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb)
 
 ---
 
