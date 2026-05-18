@@ -23,8 +23,11 @@ https://github.com/kaopanboonyuen/SAIE2026
 📄 Lecture Slides  
 [![View Lecture Slides](https://img.shields.io/badge/View-Lecture_Slides-red?style=for-the-badge)](https://github.com/kaopanboonyuen/SAIE2026/blob/main/slides/SAIE2026_ObjectDetection_PanboonyuenLecture.pdf)
 
-📓 Google Colab Notebook  
+📓 Google Colab Notebook (Student Version)  
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb)
+
+✅ Google Colab Notebook (With Solutions)  
+[![Open Solution Notebook](https://img.shields.io/badge/Open-Solution_Notebook-success?style=for-the-badge&logo=googlecolab)](https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_withSolution.ipynb)
 
 ---
 
@@ -33,6 +36,23 @@ https://github.com/kaopanboonyuen/SAIE2026
 ![YOLO](https://img.shields.io/badge/YOLO-ObjectDetection-green.svg)
 ![GPU](https://img.shields.io/badge/GPU-Accelerated-orange.svg)
 ![License](https://img.shields.io/badge/License-Educational-lightgrey.svg)
+
+---
+
+## 🔧 Useful Resources for Jetson Optimization (Real-Time Object Detection)
+
+This section collects practical resources for deploying and optimizing AI models on **NVIDIA Jetson devices**, especially for **real-time object detection, multi-camera systems, and edge AI applications**.
+
+| Resource | What it is for | Key Tricks / Why it matters |
+|----------|----------------|-----------------------------|
+| 🚀 Jetson AI Lab<br>https://www.jetson-ai-lab.com/ | Practical Jetson tutorials and deployment guides | End-to-end Jetson workflows, YOLO deployment, TensorRT optimization, real edge AI examples |
+| ⚡ Ultralytics Jetson Guide<br>https://docs.ultralytics.com/guides/nvidia-jetson | YOLO deployment on Jetson (modern pipeline) | Export YOLO → TensorRT, FP16/INT8 acceleration, FPS benchmarking, easy deployment |
+| 🎥 DeepStream + Jetson Guide<br>https://docs.ultralytics.com/guides/deepstream-nvidia-jetson | Multi-stream inference with YOLO | Real-time multi-camera pipelines, scalable inference, production-level AI systems |
+| 🧠 NVIDIA Blog<br>https://developer.nvidia.com/blog/ | Engineering insights from NVIDIA | Search: “TensorRT optimization”, “Jetson object detection”, “DeepStream pipeline” → real performance tuning tricks |
+| 📡 DeepStream SDK Docs<br>https://docs.nvidia.com/metropolis/deepstream/dev-guide/ | Full production AI video analytics framework | Multi-camera AI, streaming pipelines, GPU acceleration, real-time inference architecture |
+| ⚡ TensorRT Documentation<br>https://docs.nvidia.com/deeplearning/tensorrt/ | Core inference optimization engine | Graph fusion, layer optimization, FP32 → FP16 → INT8 conversion, latency reduction techniques |
+| 🧪 DeepStream Python Apps (GitHub)<br>https://github.com/NVIDIA-AI-IOT/deepstream_python_apps | Python-based DeepStream examples | Multi-stream video processing, RTSP camera pipelines, scalable inference demos |
+| ⚙️ TensorRT GitHub<br>https://github.com/NVIDIA/TensorRT | Low-level inference optimization toolkit | Custom plugins, deployment examples, advanced optimization and inference acceleration |
 
 ---
 
@@ -98,13 +118,15 @@ Topics include:
 
 # 🧪 Workshop Curriculum
 
-# Table of Contents
-
 ## ⭐ SAIE 2026 — Super AI Engineer Thailand
 
-### 📓 Open Workshop Notebook
+### 📚 Workshop Resources
 
+📓 Google Colab Notebook (Student Version)  
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_toStudent.ipynb)
+
+✅ Google Colab Notebook (With Solutions)  
+[![Open Solution Notebook](https://img.shields.io/badge/Open-Solution_Notebook-success?style=for-the-badge&logo=googlecolab)](https://colab.research.google.com/github/kaopanboonyuen/SAIE2026/blob/main/notebooks/SAIE2026_ObjectDetection_Workshop_withSolution.ipynb)
 
 ---
 
